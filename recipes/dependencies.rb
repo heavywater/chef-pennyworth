@@ -32,5 +32,8 @@ node.pennyworth.package_dependencies.map do |pkg|
 end
 
 node.pennyworth.ruby_gem_dependencies.map do |gem|
-  gem_package gem
+  gem = [gem].flatten
+  gem_package gem.first do
+    version gem.last if gem.size > 1
+  end
 end
