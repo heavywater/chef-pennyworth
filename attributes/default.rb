@@ -1,6 +1,5 @@
 default.pennyworth.package_dependencies = [ "libxml2-dev",
-                                    "libxslt1-dev",
-                                    "erlang" ]
+                                    "libxslt1-dev" ]
 default.pennyworth.ruby_gem_package_dependencies = []
 default.pennyworth.filesystem_scm_basedir = "/usr/src"
 default.pennyworth.mailer_recipients = "ci@jenkins-ci.org"
