@@ -68,18 +68,21 @@ pennyworth_jobs.each do |pennyworth_job|
   job = data_bag_item node.pennyworth.data_bag, pennyworth_job
   Chef::Log.info "job: #{job.inspect}"
 
+  # Install any required ruby gem dependencies
   if(job["ruby_gem_dependencies"])
-    Array(job["ruby_gem_dependencies"]).each do |dep|
-      dep = Array(dep)
-      gem_package dep.first do
-        version dep.last if dep.size > 1
+    job["ruby_gem_dependencies"].each_pair do |gem, gem_version|
+      gem_package gem do
+        version gem_version if gem_version
       end
     end
   end
-  
+ 
+  # And the same for any system package dependencies
   if(job["package_dependencies"])
-    Array(job["package_dependencies"]).each do |dep|
-      package dep
+    job["package_dependencies"].each do |pkg, pkg_version|
+      package pkg do
+        version pkg_version if pkg_version
+      end
     end
   end
 
