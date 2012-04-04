@@ -68,6 +68,21 @@ pennyworth_jobs.each do |pennyworth_job|
   job = data_bag_item node.pennyworth.data_bag, pennyworth_job
   Chef::Log.info "job: #{job.inspect}"
 
+  if(job["ruby_gem_dependencies"])
+    Array(job["ruby_gem_dependencies"]).each do |dep|
+      dep = Array(dep)
+      gem_package dep.first do
+        version dep.last if dep.size > 1
+      end
+    end
+  end
+  
+  if(job["package_dependencies"])
+    Array(job["package_dependencies"]).each do |dep|
+      package dep
+    end
+  end
+
   # resources and providers now plz
   git_branch = job["git_branch"] || "develop"
   git_remote_name = job["git_remote_name"] || "origin"
