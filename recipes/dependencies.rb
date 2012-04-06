@@ -27,10 +27,19 @@ package "ia32-libs" do
   end
 end
 
-node.pennyworth.package_dependencies.map do |pkg|
-  package pkg
-end
-
-node.pennyworth.ruby_gem_dependencies.map do |gem|
-  gem_package gem
+{
+  :package => node.pennyworth.package_dependencies,
+  :gem_package => node.pennyworth.ruby_gem_dependencies
+}.each_pair do |package_method, pkg_deps|
+  if(pkg_deps.is_a?(Hash))
+    pkg_deps.each_pair do |pkg, pkg_version|
+      send(package_method) pkg do
+        version pkg_version if pkg_version
+      end
+    end
+  else
+    pkg_deps.each do |pkg|
+      send(package_method) pkg
+    end
+  end
 end
