@@ -44,6 +44,7 @@ end
 
   execute "cp #{source} #{target}" do
     creates target
+    not_if{ File.exists(target) && FileUtils.compare(source, target) }
   end
 
   file target do
