@@ -44,6 +44,7 @@ end
 
   execute "cp #{source} #{target}" do
     creates target
+    not_if{ File.exists(target) && FileUtils.compare(source, target) }
   end
 
   file target do
@@ -73,7 +74,7 @@ pennyworth_jobs.each do |pennyworth_job|
   git_remote_name = job["git_remote_name"] || "origin"
   git_url = job["git_url"]
   git_config_name = job["git_config_name"] || "jenkins"
-  git_config_email = job["git_config_email"] || "not@real.ema.il"
+  git_config_email = job["git_config_email"] || "fake.email@example.com"
   bzr_source = job["bzr_source"]
   project_description = job["project_description"] || "#{pennyworth_job} #{git_branch} #{git_url}"
   days_to_keep_logs = job["days_to_keep_logs"] || 7
@@ -82,10 +83,10 @@ pennyworth_jobs.each do |pennyworth_job|
   build_commands = job["build_commands"] || [ "true" ]
   package_commands = job["package_commands"] || [ "true" ]
   child_projects = job["child_projects"] || []
-  xunit_file = job["xunit_file"] || nil
-  remote_poll = job["remote_poll"] || true
-  clean = job["clean"] || true
-  wipeoutworkspace = job["wipeoutworkspace"] || true
+  xunit_file = job["xunit_file"]
+  remote_poll = job["remote_poll"].nil? ? true : job["remote_poll"]
+  clean = job["clean"].nil? ? true : job["clean"]
+  wipeoutworkspace = job["wipeoutworkspace"].nil? ? true : job["wipeoutworkspace"]
   version = job["version"] || { "major" => 0, "minor" => 0 }
   job_config = File.join(node.jenkins.server.home, "#{pennyworth_job}-config.xml")
 
