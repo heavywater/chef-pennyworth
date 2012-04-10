@@ -69,6 +69,24 @@ pennyworth_jobs.each do |pennyworth_job|
   job = data_bag_item node.pennyworth.data_bag, pennyworth_job
   Chef::Log.info "job: #{job.inspect}"
 
+  # Install any required ruby gem dependencies
+  if(job["ruby_gem_dependencies"])
+    job["ruby_gem_dependencies"].each_pair do |gem, gem_version|
+      gem_package gem do
+        version gem_version if gem_version
+      end
+    end
+  end
+ 
+  # And the same for any system package dependencies
+  if(job["package_dependencies"])
+    job["package_dependencies"].each do |pkg, pkg_version|
+      package pkg do
+        version pkg_version if pkg_version
+      end
+    end
+  end
+
   # resources and providers now plz
   git_branch = job["git_branch"] || "develop"
   git_remote_name = job["git_remote_name"] || "origin"
