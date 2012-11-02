@@ -94,6 +94,7 @@ pennyworth_jobs.each do |pennyworth_job|
   git_config_name = job["git_config_name"] || "jenkins"
   git_config_email = job["git_config_email"] || "fake.email@example.com"
   bzr_source = job["bzr_source"]
+  svn_source = job["svn_source"]
   project_description = job["project_description"] || "#{pennyworth_job} #{git_branch} #{git_url}"
   days_to_keep_logs = job["days_to_keep_logs"] || 7
   mailer_recipients = job["mailer_recipients"] || node.pennyworth.mailer_recipients
@@ -121,6 +122,7 @@ pennyworth_jobs.each do |pennyworth_job|
                :git_url => git_url,
                :git_remote_name => git_remote_name,
                :bzr_source => bzr_source,
+               :svn_source => svn_source,
                :mailer_recipients => mailer_recipients,
                :test_commands => test_commands,
                :build_commands => build_commands,
